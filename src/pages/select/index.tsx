@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Select, { SelectOptions } from "../../components/Select";
+import styled from "styled-components";
 
 const options = [
   { label: "First", value: 1 },
@@ -22,6 +23,9 @@ const SelectPage = () => {
           setValue(value);
         }}
       />
+      <StCode>
+        <code>{JSON.stringify(value)}</code>
+      </StCode>
 
       <Select
         options={options}
@@ -31,8 +35,18 @@ const SelectPage = () => {
           setMulti(value);
         }}
       />
+
+      <StCode>
+        <code>{JSON.stringify(multi)}</code>
+      </StCode>
     </>
   );
 };
 
 export default SelectPage;
+
+const StCode = styled.div`
+  margin: 10px;
+  width: 30%;
+  background-color: #eee;
+`;
