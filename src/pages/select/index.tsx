@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Select, { SelectOptions } from "../../components/Select";
+import Select, { SelectOptions } from "../../features/select/components/Select";
 import styled from "styled-components";
 
 const options = [
