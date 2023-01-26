@@ -23,60 +23,54 @@ const StyledInput = styled("input", {
 });
 
 /*--------------------------------------------------------*
- * price format input
+ * 금액 형식
  *--------------------------------------------------------*/
 
 interface PriceInputProps extends Props {}
 
-const PriceInput = ({ getValues }: PriceInputProps) => {
+const PriceInput = ({ getValues, ...restProps }: PriceInputProps) => {
   const [price, setPrice] = useState({
     origin: "0",
     format: "0",
   });
 
   const onChageHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const origin = target.value.replaceAll(",", "");
-    // 방법 2] .replace(/[^0-9]/g, "")
+    const { value } = target;
+
+    const origin = value.replaceAll(",", "");
     const format = new Intl.NumberFormat().format(
-      +target.value.replace(/[^0-9]/g, "").replaceAll(",", "")
+      +value.replace(/[^0-9]/g, "").replaceAll(",", "")
     );
-
-    // 방법 1
-    // const rex = /\D/g;
-    // if (!rex.test(target.value.replaceAll(",", ""))) {
-    //   setValue((old) => ({
-    //     ...old,
-    //     raw,
-    //     format,
-    //   }));
-
-    //   getValues && getValues({ origin, format });
-    // }
 
     setPrice((pre) => ({
       ...pre,
       origin,
       format,
     }));
+
     getValues && getValues({ origin, format });
   };
 
-  return <PrmitiveInput onChange={onChageHandler} value={price.format} />;
+  return (
+    <PrmitiveInput
+      onChange={onChageHandler}
+      value={price.format}
+      {...restProps}
+    />
+  );
 };
 
 /*--------------------------------------------------------*
- * id number format input
+ * 주민등록번호 형식
  *--------------------------------------------------------*/
 
 interface IinoInputProps extends Props {}
 
-const IinoInput = ({ getValues }: IinoInputProps) => {
+const IinoInput = ({ getValues, ...restProps }: IinoInputProps) => {
   const [iino, setIino] = useState<ValuesType>({
     origin: "",
     format: "",
   });
-
-  console.log(iino);
 
   const onChangeHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const { value } = target;
@@ -96,10 +90,48 @@ const IinoInput = ({ getValues }: IinoInputProps) => {
     }
   };
 
-  return <PrmitiveInput onChange={onChangeHandler} value={iino.format} />;
+  return (
+    <PrmitiveInput
+      onChange={onChangeHandler}
+      value={iino.format}
+      {...restProps}
+    />
+  );
 };
 
+/*--------------------------------------------------------*
+ * 일반 텍스트 형식
+ *--------------------------------------------------------*/
+
+interface TextInputProps extends Props {}
+
+const TextInput = ({ getValues, ...restProps }: TextInputProps) => {
+  const [text, setText] = useState<ValuesType>({
+    origin: "",
+    format: "",
+  });
+
+  const onChangeHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    const { value } = target;
+    setText((pre) => ({ ...pre, origin: value, format: value }));
+    getValues && getValues({ origin: value, format: value });
+  };
+
+  return (
+    <PrmitiveInput
+      onChange={onChangeHandler}
+      value={text.format}
+      {...restProps}
+    />
+  );
+};
+
+/*--------------------------------------------------------*
+ * Result
+ *--------------------------------------------------------*/
+
 const Price = PriceInput;
+const Text = TextInput;
 const Iino = IinoInput;
 
-export { Price, Iino };
+export { Price, Iino, Text };
