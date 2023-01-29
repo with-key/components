@@ -1,27 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 import * as Combobox from "../components/combobox/Combobox";
 import { styled } from "../styles/stitches.conf";
 
-const users = [
-  { code: 1, value: "Durward Reynolds" },
-  { code: 2, value: "Kenton Towne" },
-  { code: 3, value: "Therese Wunsch" },
-  { code: 4, value: "Benedict Kessler" },
-  { code: 5, value: "Katelyn Rohan" },
-];
-
 export default function App() {
+  const [fetchUsers, setFetchUsers] = useState<
+    {
+      code: number;
+      value: string;
+    }[]
+  >();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const { data } = await axios.get("api/users");
+      setFetchUsers(data.users);
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
     <>
-      <Combobox.Root defaultValue={users[0].value} offset={56}>
+      <Combobox.Root
+        defaultValue={"선택해주세요."}
+        offset={56}
+        getValues={(option) => console.log(option)}
+      >
         <ComboboxTrigger>드롭다운</ComboboxTrigger>
         <ComboboxContents>
-          {users.map((user) => (
-            <ComboboxItem key={user.code} option={user}>
-              {user.value}
-            </ComboboxItem>
-          ))}
+          {fetchUsers
+            ? fetchUsers.map((user) => (
+                <ComboboxItem key={user.code} option={user}>
+                  {user.value}
+                </ComboboxItem>
+              ))
+            : "로딩 중.."}
         </ComboboxContents>
       </Combobox.Root>
     </>

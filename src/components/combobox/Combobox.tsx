@@ -13,16 +13,18 @@ type Context = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  getValues: (option: { code: number; value: string }) => void;
   value: string;
   offset: number;
 };
 
 const [Provider, useContext] = createContext<Context>("Combobox", {
+  offset: 0,
   open: false,
   value: "",
   setOpen: () => null,
   setValue: () => null,
-  offset: 0,
+  getValues: () => null,
 });
 
 /* -------------------------------------------------------*
@@ -33,11 +35,13 @@ interface ComboboxRootProps {
   children: ReactNode;
   defaultValue: string;
   offset: number;
+  getValues: (option: { code: number; value: string }) => void;
 }
 
 const ComboboxRoot = ({
   children,
   defaultValue,
+  getValues,
   offset,
 }: ComboboxRootProps) => {
   const [open, setOpen] = useState(false);
@@ -45,6 +49,7 @@ const ComboboxRoot = ({
 
   return (
     <Provider
+      getValues={getValues}
       open={open}
       setOpen={setOpen}
       value={value}
@@ -97,7 +102,6 @@ const ComboboxContents = ({
   ...restProps
 }: ComboboxContentsProps) => {
   const { open, offset } = useContext("ComboboxTrigger");
-  console.log(restProps);
   return open ? (
     <StyledDiv
       {...restProps}
@@ -130,12 +134,13 @@ const ComboboxItem = ({
   option,
   ...restProps
 }: ComboboxItemProps) => {
-  const { setValue, setOpen } = useContext("ComboboxTrigger");
+  const { setValue, setOpen, getValues } = useContext("ComboboxTrigger");
 
   return (
     <StyledItem
       {...restProps}
       onMouseDown={() => {
+        getValues(option);
         setValue(option.value);
         setOpen(false);
       }}
