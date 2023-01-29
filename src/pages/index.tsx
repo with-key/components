@@ -1,59 +1,63 @@
-import { useRef } from "react";
-import Text from "../components/@elem/Text";
+import React from "react";
 
 import * as Combobox from "../components/combobox/Combobox";
 import { styled } from "../styles/stitches.conf";
 
-const people = [
-  { id: 1, name: "Durward Reynolds", unavailable: false },
-  { id: 2, name: "Kenton Towne", unavailable: false },
-  { id: 3, name: "Therese Wunsch", unavailable: false },
-  { id: 4, name: "Benedict Kessler", unavailable: true },
-  { id: 5, name: "Katelyn Rohan", unavailable: false },
+const users = [
+  { code: 1, value: "Durward Reynolds" },
+  { code: 2, value: "Kenton Towne" },
+  { code: 3, value: "Therese Wunsch" },
+  { code: 4, value: "Benedict Kessler" },
+  { code: 5, value: "Katelyn Rohan" },
 ];
 
 export default function App() {
   return (
     <>
-      <Combobox.Root defaultValue={people[0].name}>
-        <StyledButton>드롭다운</StyledButton>
-        <StyleContents>
-          {people.map((p) => (
-            <StyledItem key={p.id} value={p.name}>
-              {p.name}
-            </StyledItem>
+      <Combobox.Root defaultValue={users[0].value} offset={56}>
+        <ComboboxTrigger>드롭다운</ComboboxTrigger>
+        <ComboboxContents>
+          {users.map((user) => (
+            <ComboboxItem key={user.code} option={user}>
+              {user.value}
+            </ComboboxItem>
           ))}
-        </StyleContents>
+        </ComboboxContents>
       </Combobox.Root>
     </>
   );
 }
 
-const StyledButton = styled(Combobox.Trigger, {
+const ComboboxTrigger = styled(Combobox.Trigger, {
   all: "unset",
   border: "1px solid #ddd",
-  width: 230,
+  width: "100%",
   height: 46,
   px: 20,
   boxSizing: "border-box",
 });
 
-const StyleContents = styled(Combobox.Contents, {
+const ComboboxContents = styled(Combobox.Contents, {
   boxSizing: "border-box",
   display: "flex",
   flexDirection: "column",
   justifyContent: "flex-start",
   alignItems: "flex-start",
-  width: 300,
+  width: "100%",
 });
 
-const StyledItem = styled(Combobox.Item, {
+const ComboboxItem = styled(Combobox.Item, {
   boxSizing: "border-box",
-  // flexGrow: 0,
-  // all: "unset",
-  height: 30,
+  height: 40,
   backgroundColor: "#fff",
   padding: 0,
   width: "100%",
-  border: "1px solid #ddd",
+  borderBottom: "1px solid #ddd",
+  display: "flex",
+  px: 20,
+  alignItems: "center",
+
+  "&:first-child": {
+    borderTop: "1px solid #ddd",
+  },
 });
